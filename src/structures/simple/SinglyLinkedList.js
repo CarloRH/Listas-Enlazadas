@@ -54,25 +54,60 @@ class SinglyLinkedList {
   }
 
   countOccurrences(value) {
-    throw new Error(
-      "TODO RETO: Implementar countOccurrences(value) en SinglyLinkedList."
-    );
+    let count = 0;
+    let current = this.head;          // empezar desde el principio
+
+    while (current !== null) {        // mientras haya nodos
+      if (this._isSameValue(current.value, value)) {
+        count++;                      // coincidencia → sumar
+      }
+      current = current.next;         // avanzar al siguiente
+    }
+
+    return count;                     // devolver el resultado
   }
 
   clean() {
-    throw new Error("TODO RETO: Implementar clean() en SinglyLinkedList.");
+    this.head = null;
+    this.tail = null;
+    this._size = 0;
   }
 
   reverseInPlace() {
-    throw new Error(
-      "TODO RETO: Implementar reverseInPlace() en SinglyLinkedList."
-    );
+    let prev = null;
+    let current = this.tail = this.head; // tail será el antiguo head
+
+    while (current !== null) {
+      const next = current.next;  // 1. guardar el siguiente ANTES de romper enlace
+      current.next = prev;        // 2. invertir el puntero
+      prev = current;             // 3. avanzar prev
+      current = next;             // 4. avanzar current
+    }
+
+    this.head = prev;             // el nuevo head es el último nodo visitado
   }
 
   removeDuplicates() {
-    throw new Error(
-      "TODO RETO: Implementar removeDuplicates() en SinglyLinkedList."
-    );
+    let current = this.head;
+
+    while (current !== null) {
+      let runner = current;           // runner parte desde current
+
+      while (runner.next !== null) {
+        if (this._isSameValue(runner.next.value, current.value)) {
+          // duplicado encontrado: saltarlo
+          if (runner.next === this.tail) {
+            this.tail = runner;       // actualizar tail si eliminamos el último
+          }
+          runner.next = runner.next.next; // desconectar el nodo duplicado
+          this._size--;
+        } else {
+          runner = runner.next;       // no es duplicado, avanzar runner
+        }
+      }
+
+      current = current.next;         // avanzar current al siguiente único
+    }
   }
 
   size() {
