@@ -75,25 +75,67 @@ class DoublyLinkedList {
   }
 
   countOccurrences(value) {
-    throw new Error(
-      "TODO RETO: Implementar countOccurrences(value) en DoublyLinkedList."
-    );
+    let count = 0;
+    let current = this.head;          // misma idea: empezar desde head
+
+    while (current !== null) {        // mientras haya nodos
+      if (this._isSameValue(current.value, value)) {
+        count++;
+      }
+      current = current.next;         // avanzar igual que en Simple
+    }
+
+    return count;
   }
 
+  // es identica a la simple
   clean() {
-    throw new Error("TODO RETO: Implementar clean() en DoublyLinkedList.");
+    this.head = null;
+    this.tail = null;
+    this._size = 0;
   }
 
   reverseInPlace() {
-    throw new Error(
-      "TODO RETO: Implementar reverseInPlace() en DoublyLinkedList."
-    );
+    let current = this.head;
+    let temp = null;
+
+    while (current !== null) {
+      temp = current.previous;       // 1. guardar previous
+      current.previous = current.next; // 2. previous apunta hacia atrás (ahora es next)
+      current.next = temp;           // 3. next apunta hacia adelante (era previous)
+      current = current.previous;    // 4. avanzar (el nuevo "siguiente" es el viejo previous)
+    }
+
+    // intercambiar head y tail
+    temp = this.head;
+    this.head = this.tail;
+    this.tail = temp;
   }
 
   removeDuplicates() {
-    throw new Error(
-      "TODO RETO: Implementar removeDuplicates() en DoublyLinkedList."
-    );
+    let current = this.head;
+
+    while (current !== null) {
+      let runner = current;
+
+      while (runner.next !== null) {
+        if (this._isSameValue(runner.next.value, current.value)) {
+          const toRemove = runner.next;
+          runner.next = toRemove.next;        // saltar el duplicado
+
+          if (toRemove.next !== null) {
+            toRemove.next.previous = runner;  // reparar el puntero previous
+          } else {
+            this.tail = runner;               // era el tail
+          }
+          this._size--;
+        } else {
+          runner = runner.next;
+        }
+      }
+
+      current = current.next;
+    }
   }
 
   size() {
